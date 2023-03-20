@@ -4,6 +4,10 @@
         "iostream": "cpp",
         "functional": "cpp",
         "deque": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     }
 }
