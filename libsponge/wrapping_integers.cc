@@ -15,7 +15,8 @@ using namespace std;
 //! \param isn The initial sequence number
 WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
     DUMMY_CODE(n, isn);
-    return WrappingInt32{0};
+    uint32_t res = (n + static_cast<uint64_t>(isn.raw_value())) % (1ul << 32);
+    return WrappingInt32{res};
 }
 
 //! Transform a WrappingInt32 into an "absolute" 64-bit sequence number (zero-indexed)
@@ -30,5 +31,20 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! has a different ISN.
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     DUMMY_CODE(n, isn, checkpoint);
-    return {};
+    uint64_t comp;
+    if(n.raw_value() >= isn.raw_value()) comp = static_cast<uint64_t>(n.raw_value()) - static_cast<uint64_t>(isn.raw_value());
+    else comp =  static_cast<uint64_t>(n.raw_value()) + (1ul << 32) - static_cast<uint64_t>(isn.raw_value());
+    uint64_t i = checkpoint / (1ul << 32);
+    uint64_t check32 = checkpoint % (1ul << 32);
+    uint64_t res;
+    if(comp < check32){
+        if((check32 - comp) <= (1ul << 32) / 2) res = comp + (1ul << 32) * i;
+        else res = comp + (1ul << 32) * (i + 1);
+    }else if(comp > check32){  
+        if(i > 0){
+            if((comp - check32) <= (1ul << 32) / 2) res = comp + (1ul << 32) * i;
+            else res = comp + (1ul << 32) * (i - 1);
+        }else res = comp + (1ul << 32) * i;
+    }else res = checkpoint;
+    return res;
 }
