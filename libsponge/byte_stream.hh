@@ -18,12 +18,12 @@ class ByteStream {
     // all, but if any of your tests are taking longer than a second,
     // that's a sign that you probably want to keep exploring
     // different approaches.
-    deque<char> _que{};     
-    size_t _capacity{};
-    bool _input_ended{};       // `true` if the stream input has ended
-    size_t _bytes_written{}; // Total number of bytes written
-    size_t _bytes_read{}; // Total number of bytes popped
-    bool _error{};     //!< Flag indicating that the stream suffered an error.
+    std::deque<char> _queue;
+    size_t _capacity_size;
+    size_t _written_size;
+    size_t _read_size;
+    bool _end_input;
+    bool _error{};  //!< Flag indicating that the stream suffered an error.
 
   public:
     //! Construct a stream with room for `capacity` bytes.
