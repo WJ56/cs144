@@ -81,6 +81,9 @@ void TCPSender::send_tcp_segment(TCPSegment &tcp_segment){
     _segments_out.push(tcp_segment);
     _unreceive_segments.push(tcp_segment);
     _next_seqno += tcp_segment.length_in_sequence_space();
+    if(_fin_f){
+        _fin_seqno = wrap(_next_seqno, _isn);
+    }
     if(!_retransmission_timer){
         _retransmission_timer = true;
         _retransmission_timer_times = 0;
@@ -92,6 +95,7 @@ void TCPSender::send_tcp_segment(TCPSegment &tcp_segment){
 void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_size) { 
     uint64_t abs_ackno = unwrap(ackno, _isn, _abs_ackno);
     if(abs_ackno < _abs_ackno || abs_ackno > _next_seqno) return;
+    _ackno = ackno;
     _abs_ackno = abs_ackno;
     if(window_size == 0){
         _window_size = 1;
@@ -119,12 +123,12 @@ void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_si
         }else break;
     }
     if(f){
-        _rto = _initial_retransmission_timeout;
-        _consecutive_retransmissions = 0;
         _retransmission_timer_times = 0;
-        _retransmission_timer = !_unreceive_segments.empty();
-        fill_window();
     }
+    _rto = _initial_retransmission_timeout;
+    _retransmission_timer = !_unreceive_segments.empty();
+    _consecutive_retransmissions = 0;
+    fill_window();
  }
 
 //! \param[in] ms_since_last_tick the number of milliseconds since the last call to this method
@@ -146,6 +150,14 @@ unsigned int TCPSender::consecutive_retransmissions() const { return _consecutiv
 
 void TCPSender::send_empty_segment() {
     TCPSegment tcp_segment;
-   tcp_segment.header().seqno = wrap(_next_seqno, _isn);
-   _unreceive_segments.push(tcp_segment);
+    tcp_segment.header().seqno = wrap(_next_seqno, _isn);
+    _segments_out.push(tcp_segment);
+}
+
+bool TCPSender::syn_send(){
+    return _syn_f;
+}
+
+bool TCPSender::fin_send(){
+    return _fin_f;
 }

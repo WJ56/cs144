@@ -35,6 +35,7 @@ class TCPSender {
 
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
+    WrappingInt32 _ackno{_isn};
     uint64_t _abs_ackno{0};
     uint16_t _window_size{1};
     bool _window_size_0{false};
@@ -43,6 +44,8 @@ class TCPSender {
     bool _fin_f{false};
 
     unsigned int _consecutive_retransmissions{0};
+
+    WrappingInt32 _fin_seqno{_isn};
 
   public:
     //! Initialize a TCPSender
@@ -101,6 +104,8 @@ class TCPSender {
 
     void send_tcp_segment(TCPSegment &tcp_segment);
     //!@}
+    
+    bool syn_send();
+    bool fin_send();
 };
-
 #endif  // SPONGE_LIBSPONGE_TCP_SENDER_HH

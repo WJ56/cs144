@@ -21,6 +21,10 @@ class TCPConnection {
     //! in case the remote TCPConnection doesn't know we've received its whole stream?
     bool _linger_after_streams_finish{true};
 
+    size_t _linger{0};
+
+    bool _active{true};
+
   public:
     //! \name "Input" interface for the writer
     //!@{
@@ -61,6 +65,10 @@ class TCPConnection {
 
     //! \name Methods for the owner or operating system to call
     //!@{
+
+    bool fill_window();
+
+    void send_rst_segment();
 
     //! Called when a new segment has been received from the network
     void segment_received(const TCPSegment &seg);

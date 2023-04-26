@@ -17,8 +17,11 @@ StreamReassembler::StreamReassembler(const size_t capacity) : _output(capacity),
 //! \details This function accepts a substring (aka a segment) of bytes,
 //! possibly out-of-order, from the logical stream, and assembles any newly
 //! contiguous substrings and writes them into the output stream in order.
-void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) {
+void StreamReassembler::push_substring(const std::string &data, const uint64_t index, const bool eof) {
     if(_output.input_ended()) return;
+    //越界处理
+    if(begin + _capacity <= index) return;
+    //if(index - begin >= _capacity) return;
     if(eof) _eof = index + data.size();
     if(index > begin){
         if(unreassembler.find(index) != unreassembler.end()){
@@ -120,7 +123,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
 
 size_t StreamReassembler::unassembled_bytes() const { 
     return number_map;
- }
+}
 
 bool StreamReassembler::empty() const { 
     return number_map == 0;
