@@ -15,8 +15,8 @@ void get_URL(const string &host, const string &path) {
     // the computer whose name is in the "host" string,
     // then request the URL path given in the "path" string.
     // 2
-    //TCPSocket sock1;
-    CS144TCPSocket sock1;
+    FullStackSocket sock1;
+    //CS144TCPSocket sock1;
     sock1.connect(Address(host, "http"));
     sock1.write("GET " + path + " HTTP/1.1\r\n");
     sock1.write("Host: " + host + "\r\n");
@@ -30,7 +30,7 @@ void get_URL(const string &host, const string &path) {
         cout << sock1.read();
     }
     // 3
-    //sock1.close();
+    // sock1.close();
     sock1.wait_until_closed();
 
     // cerr << "Warning: get_URL() has not been implemented yet.\n";
