@@ -1,3 +1,14 @@
+**应用层TCP/IP协议栈实现 | CS144网络系统课程项目**
+
+![image](https://github.com/WJ56/cs144/assets/113446210/eae0a85f-247b-439c-a57a-7ef03c7bc4c2)
+
+- 设计并实现了应用层的TCP/IP协议栈，成功模拟了TCP/IP的核心机制，包括三次握手、四次挥手、流量控制、超时重传、可靠数据传输、ARP地址解析协议以及路由转发。
+- 采用UDP协议在用户空间内完成数据包的发送和接收，以深入理解并展示TCP的传输保证与性能特性。
+- 编写了高效的网络通信代码，实现了与真实TCP连接相似的传输性能，同时保证了高度的数据传输可靠性。
+- 应用了单元测试和集成测试，通过CS144提供的开源测试脚本验证了协议栈的正确性和性能，确保实现满足严格的网络通信标准。
+- 通过该项目，加深了对网络协议原理的理解，并熟练掌握了网络编程和系统调试的实践技能。
+
+
 For build prereqs, see [the CS144 VM setup instructions](https://web.stanford.edu/class/cs144/vm_howto).
 
 ## Sponge quickstart
